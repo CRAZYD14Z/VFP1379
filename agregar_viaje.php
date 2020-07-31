@@ -98,8 +98,11 @@
             <i class="fas fa-angle-up"></i>
         </a>
     </div>
+    <!-- Plantilla de insersión -->
     <?php include('add/viajes_int.php');?>
+    <!-- Plantilla de edición -->
     <?php include('edit/viajes_int.php');?>
+    <!-- Plantilla de borrado -->
     <?php include('delete/viajes_int.php');?>        
     
 
