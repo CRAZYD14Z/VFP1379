@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-
 <?php include('head.php');?>
-
 <body id="page-top">
     <div id="wrapper">
         <?php include('menu.php');?>
