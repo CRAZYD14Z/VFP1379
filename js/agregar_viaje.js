@@ -1,6 +1,41 @@
-var Filas = 0; 
-        
-        $("#GUARDARi").mousedown(function () { 
+        var Filas = 0; 
+
+        $( "#agregar_viaje" ).submit(function( event ) {
+            var Detalle = "";
+            for (i = 1; i <= Filas; i++) {
+                if (!$("#F"+i).is(":hidden")){
+                    var button = $("#a"+i) // Button that triggered the modal
+                    var Id = button.data('id');
+                    var Org = button.data('org');
+                    var Dst = button.data('dst');
+                    var Fi = button.data('fi');
+                    var Ff = button.data('ff');
+                    var Des = button.data('des');
+                    var Gas = button.data('gas');
+                    Detalle+='{'+Id+'|'+Org+'|'+Dst+'|'+Fi+'|'+Ff+'|'+Des+'|'+Gas
+                }
+            }     
+            $("#Detalle").val(Detalle);
+            
+
+            var parametros = $("#agregar_viaje").serialize();
+
+            $.ajax({
+                    type: "POST",
+                    url: "ajax/guardar_viaje.php",
+                    data: parametros,
+                     beforeSend: function(objeto){
+                        $("#resultados").html("Enviando...");
+                      },
+                    success: function(datos){
+                    $("#resultados").html(datos);                    
+                  }
+            });            
+            event.preventDefault();
+
+        });
+
+        $( "#add_Intinerario" ).submit(function( event ) {
             Filas+=1;
             var Tabla = $("#Intinerario").html();
 
@@ -12,7 +47,7 @@ var Filas = 0;
             Fila+='<td>' + $("#FFi").val() + '</td>'
             Fila+='<td class="text-right">' + $("#GASi").val() + '</td>'
             Fila+='<td class="text-center">'
-            Fila+='<a style="color: orange" href="#" data-target="#editIntinerarioModal" class="edit" data-toggle="modal"'
+            Fila+='<a id="a' + Filas + '" style="color: orange" href="#" data-target="#editIntinerarioModal" class="edit" data-toggle="modal"'
             Fila+='data-ID="'+Filas+'"'
             Fila+='data-ORG="' + $("#ORGi").val() + '"'
             Fila+='data-DST="' + $("#DSTi").val() + '"'
@@ -32,12 +67,12 @@ var Filas = 0;
             $("#Intinerario").html(Tabla + Fila );
 
             $('#addIntinerario').modal('toggle');
+
+            Recalcula();
+            event.preventDefault();
         });
 
-        $("#EDITARi").mousedown(function () { 
-
-
-            
+        $( "#edit_Intinerario" ).submit(function( event ) {
             var Fila ='<td>'+ $("#eIDi").val() +'</td>'
             Fila+='<td>' + $("#eORGi").val() + '</td>'
             Fila+='<td>' + $("#eDSTi").val() + '</td>'
@@ -45,7 +80,7 @@ var Filas = 0;
             Fila+='<td>' + $("#eFFi").val() + '</td>'
             Fila+='<td class="text-right">' + $("#eGASi").val() + '</td>'
             Fila+='<td class="text-center">'
-            Fila+='<a style="color: orange" href="#" data-target="#editIntinerarioModal" class="edit" data-toggle="modal"'
+            Fila+='<a id="a' + Filas + '" style="color: orange" href="#" data-target="#editIntinerarioModal" class="edit" data-toggle="modal"'
             Fila+='data-ID="'+ $("#eIDi").val() +'"'
             Fila+='data-ORG="' + $("#eORGi").val() + '"'
             Fila+='data-DST="' + $("#eDSTi").val() + '"'
@@ -62,12 +97,19 @@ var Filas = 0;
             Fila+='</td>'            
 
             $("#F"+$("#eIDi").val()).html(Fila );
+
             $('#editIntinerarioModal').modal('toggle');
+
+            Recalcula();
+            event.preventDefault();
         });
 
         $("#BORRARi").mousedown(function () {             
             $("#F"+$('#delete_id').val()).hide();
             $('#deleteIntinerarioModal').modal('toggle');
+
+            Recalcula();
+
         });
 
 
@@ -105,3 +147,18 @@ var Filas = 0;
             $('#delete_id').val(Id)
 
         })
+
+        function Recalcula(){
+            
+            var Total = 0;
+            for (i = 1; i <= Filas; i++) {
+                if (!$("#F"+i).is(":hidden")){
+                    
+                    var button = $("#a"+i) // Button that triggered the modal
+                    var Gas = button.data('gas');
+                    Total+=Gas;   
+                }
+            }    
+            $("#GAS").val(Total);         
+
+        }
